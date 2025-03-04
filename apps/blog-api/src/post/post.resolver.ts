@@ -9,11 +9,23 @@ export class PostResolver {
   constructor(private readonly postService: PostService) {}
 
   @Query(() => [Post], { name: 'posts' })
-  @UseGuards(JwtAuthGuard)
-  findAll(@Context() context) {
+  // @UseGuards(JwtAuthGuard)
+  findAll(
+    @Context() context,
+    @Args('skip', { nullable: true }) skip?: number,
+    @Args('take', { nullable: true }) take?: number,
+  ) {
     const user = context.req.user;
-    console.log('🚀 ~ PostResolver ~ findAll ~ user:', user);
+    return this.postService.findAll({ take, skip });
+  }
 
-    return this.postService.findAll();
+  @Query(() => Int, { name: 'postCount' })
+  count() {
+    return this.postService.count();
+  }
+
+  @Query(() => Post)
+  getPostById(@Args('id', { type: () => Int }) id: number) {
+    return this.postService.findOne(id);
   }
 }

@@ -1,6 +1,7 @@
 import { BACKEND_URL } from "./constants";
 
-export const fetchGraphQL = async (query: string, variabes = {}) => {
+export const fetchGraphQL = async (query: string, variables = {}) => {
+  console.log(variables);
   const response = await fetch(`${BACKEND_URL}/graphql`, {
     method: "POST",
     headers: {
@@ -8,11 +9,12 @@ export const fetchGraphQL = async (query: string, variabes = {}) => {
     },
     body: JSON.stringify({
       query,
-      variabes,
+      variables,
     }),
   });
 
   const result = await response.json();
+
   if (result.errors) {
     console.error("GraphQL errors:", result.errors);
     throw new Error("Failed to fetch the data from GraphQL");

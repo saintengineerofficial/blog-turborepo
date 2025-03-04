@@ -17,5 +17,5 @@ export class CommentEntity {
   author: User;
 
   @Field()
-  createAt: Date;
+  createdAt: Date;
 }

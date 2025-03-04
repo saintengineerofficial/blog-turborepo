@@ -17,7 +17,7 @@ type CommentEntity {
   content: String!
   post: Post!
   author: User!
-  createAt: DateTime!
+  createdAt: DateTime!
 }
 
 """
@@ -38,8 +38,8 @@ type Post {
   thumbnail: String
   content: String!
   published: Boolean!
-  createAt: DateTime!
-  updateAt: DateTime!
+  createdAt: DateTime!
+  updatedAt: DateTime!
   author: User!
   tags: [Tag!]!
   comments: [CommentEntity!]!
@@ -53,7 +53,9 @@ type AuthPayload {
 }
 
 type Query {
-  posts: [Post!]!
+  posts(skip: Float, take: Float): [Post!]!
+  postCount: Int!
+  getPostById(id: Int!): Post!
 }
 
 type Mutation {

@@ -14,5 +14,5 @@ export class Like {
   post: Post;
 
   @Field()
-  createAt: Date;
+  createdAt: Date;
 }

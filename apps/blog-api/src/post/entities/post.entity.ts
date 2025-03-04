@@ -24,10 +24,10 @@ export class Post {
   published: boolean;
 
   @Field()
-  createAt: Date;
+  createdAt: Date;
 
   @Field()
-  updateAt: Date;
+  updatedAt: Date;
 
   @Field(() => User)
   author: User;

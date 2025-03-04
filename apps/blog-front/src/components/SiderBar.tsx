@@ -16,22 +16,15 @@ const SideBar = (props: SideBarProps) => {
 
   return (
     <>
-      <button
-        className={props.triggerClassName}
-        onClick={() => setIsShow((prev) => !prev)}
-      >
+      <button className={props.triggerClassName} onClick={() => setIsShow(prev => !prev)}>
         {props.triggerIcon}
       </button>
       <div
         ref={ref}
-        className={cn(
-          "w-60 absolute top-0 z-50 duration-300  transition-all bg-white rounded-r-md min-h-screen",
-          {
-            "-left-full": !isShow,
-            "left-0": isShow,
-          }
-        )}
-      >
+        className={cn("w-60 absolute top-0 z-50 duration-300  transition-all bg-white rounded-r-md min-h-screen", {
+          "-left-full": !isShow,
+          "left-0": isShow,
+        })}>
         {props.children}
       </div>
     </>
