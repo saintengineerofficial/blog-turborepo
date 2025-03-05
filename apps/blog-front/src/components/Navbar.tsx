@@ -1,7 +1,13 @@
 import React from 'react'
 import Link from 'next/link';
+import { getSession } from '@/lib/session';
+import SignInPanel from './SignInPanel';
+import Profile from './Profile';
 
-const Navbar = () => {
+const Navbar = async () => {
+
+  const session = await getSession()
+
   return (
     <>
       <h1 className="text-2xl font-bold p-2">My Modern Blog</h1>
@@ -10,6 +16,11 @@ const Navbar = () => {
         <Link href="/">Blog</Link>
         <Link href="#about">About</Link>
         <Link href="#contact">Contact</Link>
+        {session && session.user ? (
+          <Profile user={session.user} />
+        ) : (
+          <SignInPanel />
+        )}
       </div>
     </>
   )

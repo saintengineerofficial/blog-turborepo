@@ -8,6 +8,7 @@ import { SignUpFormSchema } from "../zodSchemas/signUpFormSchema";
 import { print } from "graphql";
 import { LoginFormSchema } from "../zodSchemas/loginFormSchema";
 import { revalidatePath } from "next/cache";
+import { createSession } from "../session";
 
 export const signUp = async (state: SignUpFormState, formData: FormData): Promise<SignUpFormState> => {
   const validateFields = SignUpFormSchema.safeParse(Object.fromEntries(formData.entries()));
@@ -27,7 +28,7 @@ export const signUp = async (state: SignUpFormState, formData: FormData): Promis
       message: "Error creating",
     };
 
-  redirect("/auth/signIn");
+  redirect("/auth/signin");
 };
 
 export const signIn = async (state: SignUpFormState, formData: FormData): Promise<SignUpFormState> => {
@@ -47,6 +48,8 @@ export const signIn = async (state: SignUpFormState, formData: FormData): Promis
       data: Object.fromEntries(formData.entries()),
       message: "Invalid Credentials",
     };
+
+  await createSession({ user: { id: data.signIn.id }, accessToken: data.signIn.accessToken });
 
   revalidatePath("/");
   redirect("/");

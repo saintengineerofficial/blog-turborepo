@@ -2,6 +2,7 @@ import { fetchPostById } from "@/lib/actions/postActions";
 import Image from "next/image";
 import React from "react";
 import SanitizedContent from "./_components/SanitizedContent";
+import Comments from './_components/Comments';
 
 type PostPageProps = {
   params: { id: string };
@@ -20,6 +21,7 @@ const PostPage = async ({ params }: PostPageProps) => {
         <Image src={post.thumbnail ?? "/no-image.png"} alt={post.title} fill className='rounded-md object-cover' />
       </div>
       <SanitizedContent content={post.content} />
+      <Comments></Comments>
     </main>
   );
 };
