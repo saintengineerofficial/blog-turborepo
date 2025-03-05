@@ -1,6 +1,16 @@
 import type { NextConfig } from "next";
 
 const nextConfig: NextConfig = {
+  compress: true,
+  webpack: (config, { dev }) => {
+    if (!dev) {
+      config.cache = {
+        type: "filesystem",
+        maxMemoryPages: 50,
+      };
+    }
+    return config;
+  },
   images: {
     remotePatterns: [
       {
