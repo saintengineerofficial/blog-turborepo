@@ -1,44 +1,62 @@
-import React from "react";
-import { Button } from "@/components/ui/button";
-import { Form, FormControl, FormDescription, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form";
+"use client";
+
+import SubmitButton from "@/components/SubmitButton";
 import { Input } from "@/components/ui/input";
-import { useForm } from "react-hook-form";
-import { zodResolver } from "@hookform/resolvers/zod";
-import { SignUpFormSchema } from "@/lib/zodSchemas/signUpFormSchema";
-import { z } from "zod";
+import { Label } from "@/components/ui/label";
+import { signUp } from "@/lib/actions/auth";
+import { useActionState } from "react";
 
 const SignUpForm = () => {
-  const form = useForm<z.infer<typeof SignUpFormSchema>>({
-    resolver: zodResolver(SignUpFormSchema),
-    defaultValues: {
-      name: "",
-      password: "",
-      email: "",
-    },
-  });
 
-  const onSubmit = (values: z.infer<typeof SignUpFormSchema>) => {};
-
+  const [state, action] = useActionState(signUp, undefined)
   return (
-    <Form {...form}>
-      <form onSubmit={form.handleSubmit(onSubmit)} className='space-y-8'>
-        <FormField
-          control={form.control}
-          name='name'
-          render={({ field }) => (
-            <FormItem>
-              <FormLabel>Username</FormLabel>
-              <FormControl>
-                <Input placeholder='shadcn' {...field} />
-              </FormControl>
-              <FormDescription>This is your public display name.</FormDescription>
-              <FormMessage />
-            </FormItem>
-          )}
+    <form action={action} className="flex flex-col gap-2">
+      {!!state?.message && <p className="text-red-500 text-sm">{state.message}</p>}
+      <div>
+        <Label htmlFor="name">Name</Label>
+        <Input
+          id="name"
+          name="name"
+          placeholder="Saint"
+          defaultValue={state?.data.name}
         />
-        <Button type='submit'>Submit</Button>
-      </form>
-    </Form>
+      </div>
+      {!!state?.errors?.name && (<p className="text-red-500 text-sm">{state.errors.name}</p>)}
+
+      <div>
+        <Label htmlFor="email">Email</Label>
+        <Input
+          id="email"
+          name="email"
+          type='email'
+          placeholder="xxx@example.com"
+          defaultValue={state?.data.email}
+        />
+      </div>
+      {!!state?.errors?.email && (<p className="text-red-500 text-sm">{state.errors.email}</p>)}
+
+      <div>
+        <Label htmlFor="password">Password</Label>
+        <Input
+          id="password"
+          name="password"
+          type="password"
+          defaultValue={state?.data.password}
+        />
+      </div>
+      {!!state?.errors?.password && (
+        <div className="text-sm text-red-500">
+          <p>Password Must:</p>
+          <ul>
+            {state.errors.password.map((err) => (
+              <li key={err}>{err}</li>
+            ))}
+          </ul>
+        </div>
+      )}
+
+      <SubmitButton>Sign Up</SubmitButton>
+    </form>
   );
 };
 

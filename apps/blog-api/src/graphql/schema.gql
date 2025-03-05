@@ -60,7 +60,7 @@ type Query {
 
 type Mutation {
   createUser(createUserInput: CreateUserInput!): User!
-  signIn(signInput: SignInInput!): AuthPayload!
+  signIn(signInInput: SignInInput!): AuthPayload!
 }
 
 input CreateUserInput {
