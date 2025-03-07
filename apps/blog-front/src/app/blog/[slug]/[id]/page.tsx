@@ -3,6 +3,7 @@ import Image from "next/image";
 import React from "react";
 import SanitizedContent from "./_components/SanitizedContent";
 import Comments from "./_components/Comments";
+import { getSession } from "@/lib/session";
 
 type PostPageProps = {
   params: { id: string };
@@ -10,6 +11,7 @@ type PostPageProps = {
 
 const PostPage = async ({ params }: PostPageProps) => {
   const postId = (await params).id;
+  const session = await getSession()
   const post = await fetchPostById(+postId);
   return (
     <main className='container mx-auto px-4 py-8 mt-16'>
@@ -21,7 +23,7 @@ const PostPage = async ({ params }: PostPageProps) => {
         <Image src={post.thumbnail ?? "/no-image.png"} alt={post.title} fill className='rounded-md object-cover' />
       </div>
       <SanitizedContent content={post.content} />
-      <Comments postId={+postId}></Comments>
+      <Comments postId={+postId} user={session?.user}></Comments>
     </main>
   );
 };
