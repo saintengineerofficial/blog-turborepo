@@ -13,7 +13,8 @@ const Home = async ({ searchParams }: Props) => {
   const { pageNum } = await searchParams;
   const { data: posts, total } = await fetchPosts({ pageNum: pageNum ? +pageNum : undefined });
 
-  const session = getSession()
+  const session = await getSession();
+  console.log("%c", "color: green; font-weight: bold;", { session });
 
   return (
     <main>

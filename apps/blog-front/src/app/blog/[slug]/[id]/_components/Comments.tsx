@@ -2,7 +2,6 @@
 import React, { useState } from "react";
 import { DEFAULT_PAGE_SIZE } from "@/lib/constants";
 import { useQuery } from "@tanstack/react-query";
-import { comment } from "postcss";
 import { getPostComments } from "@/lib/actions/commentActions";
 import CommentCard from "./CommentCard";
 import CommentPagination from "./CommentPagination";
@@ -12,7 +11,7 @@ import AddComment from "./AddComment";
 
 type CommentsProps = {
   postId: number;
-  user?: SessionUser
+  user?: SessionUser;
 };
 
 const Comments = ({ postId, user }: CommentsProps) => {
@@ -32,7 +31,7 @@ const Comments = ({ postId, user }: CommentsProps) => {
     <div className='p-2 rounded-md shadow-md'>
       <button onClick={() => refetch()}></button>
       <h6 className='text-lg text-slate-700 '>Comments</h6>
-      {!!user && <AddComment postId={postId} user={user} />}
+      {!!user && <AddComment postId={postId} user={user} refetch={refetch} />}
       <div className='flex flex-col gap-4'>
         {isLoading ? Array.from({ length: 12 }).map((_, index) => <CommentCardSkeleton key={index} />) : data?.comments.map(comment => <CommentCard key={comment.id} comment={comment} />)}
       </div>

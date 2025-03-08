@@ -2,6 +2,7 @@ import { fa, faker } from '@faker-js/faker';
 import { PrismaClient } from '@prisma/client';
 import { hash } from 'argon2';
 
+// npx prisma init
 // npx prisma migrate dev --name init
 const prisma = new PrismaClient();
 

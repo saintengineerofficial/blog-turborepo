@@ -15,16 +15,19 @@ export async function getPostComments({ postId, take, skip }: { postId: number; 
   };
 }
 
-export async function saveComment(state: CreateCommentFormState, formData: FormData) {
-  const validateFields = CommentFormSchema.safeParse(Object.fromEntries(formData.entries()));
-  if (!validateFields.success) {
+export async function saveComment(state: CreateCommentFormState, formData: FormData): Promise<CreateCommentFormState> {
+  const validatedFields = CommentFormSchema.safeParse(Object.fromEntries(formData.entries()));
+
+  if (!validatedFields.success)
     return {
       data: Object.fromEntries(formData.entries()),
-      errors: validateFields.error.flatten().fieldErrors,
+      errors: validatedFields.error.flatten().fieldErrors,
     };
-  }
 
-  const data = await authFetchGraphQL(print(CREATE_COMMENT_MUTATION), { input: { ...validateFields.data } });
+  const data = await authFetchGraphQL(print(CREATE_COMMENT_MUTATION), { input: { ...validatedFields.data } });
+
+  console.log({ data });
+
   if (data)
     return {
       message: "Success! Your comment saved!",

@@ -13,6 +13,7 @@ export class AuthService {
     private prisma: PrismaService,
     private jwtService: JwtService,
   ) {}
+
   async validateLocalUser({ email, password }: SignInInput) {
     const user = await this.prisma.user.findUnique({
       where: {
@@ -48,7 +49,8 @@ export class AuthService {
   async jwtValidateUser(userId: number) {
     const user = await this.prisma.user.findUnique({ where: { id: userId } });
     if (!user) throw new UnauthorizedException('User not found');
-    return user.id;
+    const currentUser = { id: user.id };
+    return currentUser;
   }
 
   async validateGoogleUser(googleUser: CreateUserInput) {

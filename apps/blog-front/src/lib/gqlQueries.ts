@@ -69,15 +69,9 @@ export const GET_POST_COMMENTS = gql`
 `;
 
 export const CREATE_COMMENT_MUTATION = gql`
-  mutation createComment($input: CreateCommentInput) {
+  mutation createComment($input: CreateCommentInput!) {
     createComment(createCommentInput: $input) {
       id
-      content
-      createdAt
-      author {
-        name
-        avatar
-      }
     }
   }
 `;

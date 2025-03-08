@@ -2,7 +2,6 @@ import { BACKEND_URL } from "./constants";
 import { getSession } from "./session";
 
 export const fetchGraphQL = async (query: string, variables = {}) => {
-  console.log(variables);
   const response = await fetch(`${BACKEND_URL}/graphql`, {
     method: "POST",
     headers: {
@@ -25,6 +24,8 @@ export const fetchGraphQL = async (query: string, variables = {}) => {
 };
 
 export const authFetchGraphQL = async (query: string, variables = {}) => {
+  console.log("🚀 ~ authFetchGraphQL ~ variables:", variables);
+
   const session = await getSession();
   const response = await fetch(`${BACKEND_URL}/graphql`, {
     method: "POST",
