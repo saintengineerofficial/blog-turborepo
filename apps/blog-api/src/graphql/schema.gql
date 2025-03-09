@@ -31,6 +31,11 @@ type Tag {
   posts: [Post!]!
 }
 
+type Count {
+  likes: Int!
+  comments: Int!
+}
+
 type Post {
   id: Int!
   title: String!
@@ -43,6 +48,7 @@ type Post {
   author: User!
   tags: [Tag!]!
   comments: [CommentEntity!]!
+  _count: Count!
 }
 
 type AuthPayload {
@@ -56,13 +62,19 @@ type Query {
   posts(skip: Float, take: Float): [Post!]!
   postCount: Int!
   getPostById(id: Int!): Post!
+  getUserPost(skip: Int, take: Int): [Post!]!
+  userPostCount: Int!
   getPostComments(postId: Int!, take: Int = 12, skip: Int = 0): [CommentEntity!]!
   postCommentCount(postId: Int!): Int!
+  postLikeCount(postId: Int!): Int!
+  userLikePost(postId: Int!): Boolean!
 }
 
 type Mutation {
   createUser(createUserInput: CreateUserInput!): User!
   createComment(createCommentInput: CreateCommentInput!): CommentEntity!
+  likePost(postId: Int!): Boolean!
+  unlikePost(postId: Int!): Boolean!
   signIn(signInInput: SignInInput!): AuthPayload!
 }
 

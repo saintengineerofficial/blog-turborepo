@@ -29,4 +29,34 @@ export class PostService {
       include: { author: true, tags: true },
     });
   }
+
+  async findPostByUser({
+    userId,
+    skip,
+    take,
+  }: {
+    userId: number;
+    skip: number;
+    take: number;
+  }) {
+    return this.prisma.post.findMany({
+      where: { authorId: userId },
+      select: {
+        id: true,
+        content: true,
+        createdAt: true,
+        published: true,
+        slug: true,
+        title: true,
+        thumbnail: true,
+        _count: { select: { likes: true, comments: true } },
+      },
+      skip,
+      take,
+    });
+  }
+
+  async userPostCount(userId: number) {
+    return await this.prisma.post.count({ where: { authorId: userId } });
+  }
 }
