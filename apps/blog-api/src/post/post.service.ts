@@ -1,6 +1,8 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, UnauthorizedException } from '@nestjs/common';
 import { DEFAULT_PAGE_SIZE } from 'src/constant';
 import { PrismaService } from 'src/prisma/prisma.service';
+import { CreatePostInput } from './dto/create-post.input';
+import { UpdatePostInput } from './dto/update-post.input';
 
 @Injectable()
 export class PostService {
@@ -14,6 +16,7 @@ export class PostService {
     take?: number;
   }) {
     return await this.prisma.post.findMany({
+      orderBy: { createdAt: 'desc' },
       skip,
       take,
     });
@@ -58,5 +61,57 @@ export class PostService {
 
   async userPostCount(userId: number) {
     return await this.prisma.post.count({ where: { authorId: userId } });
+  }
+
+  async create(createPostInout: CreatePostInput, authorId: number) {
+    return await this.prisma.post.create({
+      data: {
+        ...createPostInout,
+        author: { connect: { id: authorId } },
+        tags: {
+          connectOrCreate: createPostInout.tags.map((tag) => ({
+            where: { name: tag },
+            create: { name: tag },
+          })),
+        },
+      },
+    });
+  }
+
+  async update(updatePostInput: UpdatePostInput, authorId: number) {
+    const matchedAuthorId = await this.prisma.post.findUnique({
+      where: { id: updatePostInput.postId, authorId },
+    });
+
+    if (!matchedAuthorId) throw new UnauthorizedException();
+
+    const { postId, ...data } = updatePostInput;
+    return await this.prisma.post.update({
+      where: { id: postId },
+      data: {
+        ...data,
+        tags: {
+          set: [],
+          connectOrCreate: updatePostInput.tags!.map((tag) => ({
+            where: { name: tag },
+            create: { name: tag },
+          })),
+        },
+      },
+    });
+  }
+
+  async delete(postId: number, authorId: number) {
+    const matchedAuthorId = await this.prisma.post.findUnique({
+      where: { id: postId, authorId },
+    });
+
+    if (!matchedAuthorId) throw new UnauthorizedException();
+
+    const result = await this.prisma.post.delete({
+      where: { id: postId, authorId },
+    });
+
+    return !!result;
   }
 }

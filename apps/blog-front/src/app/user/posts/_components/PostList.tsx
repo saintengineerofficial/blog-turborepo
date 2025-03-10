@@ -1,6 +1,7 @@
 import { Post } from "@/lib/types/modelTypes";
 import React from "react";
 import PostListItem from "./PostListItem";
+import Pagination from "@/components/Pagination";
 
 type PostListProps = {
   currentPage: number;
@@ -24,6 +25,8 @@ const PostList = ({ currentPage, total, posts }: PostListProps) => {
       {posts.map(post => (
         <PostListItem post={post} key={post.id} />
       ))}
+
+      <Pagination {...{ currentPage, totalPages: total }} className="my-4" />
     </>
   );
 };
