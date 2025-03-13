@@ -11,13 +11,15 @@ export class JwtStrategy extends PassportStrategy(Strategy) {
     private authService: AuthService,
   ) {
     super({
-      jwtFromRequest: ExtractJwt.fromAuthHeaderAsBearerToken(),
+      jwtFromRequest: ExtractJwt.fromAuthHeaderAsBearerToken(), //从请求头的 Authorization 字段提取 Bearer Token,自动验证
       secretOrKey: configService.get<string>('JWT_SECRET'),
-      ignoreExpiration: false,
+      ignoreExpiration: false, //会拒绝过期令牌
     });
   }
 
-  // 自动加入到请求体，实现req.user
+  // 解密后的 JWT 载荷（Payload）传入 validate 方法
+  // 返回的用户对象会被附加到 req.user，供后续逻辑使用。
+  // validate 返回 null 或抛出异常 → 认证失败。
   validate(payload: AuthJwtPayload) {
     const userId = payload.sub;
     return this.authService.jwtValidateUser(userId);
